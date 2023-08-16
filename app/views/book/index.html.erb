@@ -1,0 +1,12 @@
+<h1>Book Store</h1>
+<p><%= session[:user_id] %></p>
+
+<%= link_to "logout", user_logout_path %>
+
+<% @books.each do |i| %>
+    <p><%= i.author %></p>
+    <p><%= i.title %></p>
+    <p><%= i.description %></p>
+    <p><%= i.genre %></p>
+    <%= image_tag i.cover_image %>
+<% end %>
