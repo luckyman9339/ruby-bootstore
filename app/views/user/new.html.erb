@@ -13,12 +13,9 @@
       <%= f.label :password %>
       <%= f.password_field :password %>
     </div>
-  
-    <div class="field">
-      <%= f.label :role %>
-      <%= f.select :user_role, [['User', 'user'], ['Seller', 'seller']] %>
-    </div>  
-      
+
+    <%= f.hidden_field :user_role %>
+    
     <div class="actions">
       <%= f.submit %>
     </div>

@@ -13,3 +13,14 @@
  *= require_tree .
  *= require_self
  */
+
+ .container{
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+ }
+ .book{
+    flex: 0 1 30%;
+    display: flex;
+    gap: 1rem;
+ }

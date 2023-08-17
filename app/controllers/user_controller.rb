@@ -1,20 +1,17 @@
 class UserController < ApplicationController
   def new
     @user = User.new
+    @user.user_role = params[:role] == 'admin' ? 'admin' : 'user'
   end
 
   def login
-    if request.post?
-      @user = User.find_by(email: params[:email])
-      if @user&.authenticate(params[:password])
-        session[:user_id] = @user.id
-        redirect_to root_path, notice: "Logged in successfully"
-      else
-        flash.now[:alert] = "Invalid email or password."
-        render :new
-      end
+    @user = User.find_by(email: params[:email])
+    if @user&.authenticate(params[:password])
+      session[:user_id] = @user.id
+      redirect_to root_path, notice: "Logged in successfully"
     else
-      @user = User.new
+      flash.now[:alert] = "Invalid email or password."
+      render :new
     end
   end
 
@@ -28,10 +25,11 @@ class UserController < ApplicationController
   end
 
   def create
+    byebug
     @user = User.new(user_params)
     if @user.save
       session[:user_id] = @user.id
-      redirect_to root_path, notice: "Registration successful. Welcome!"
+      redirect_to login_path, notice: "Registration successful. Welcome!"
     else
       render :new
     end

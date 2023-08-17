@@ -1,13 +1,10 @@
 class User < ApplicationRecord
     has_secure_password
-
     validates_presence_of :email
 
-    def admin?
-        role == 'admin'
-    end
+    # after_initialize :set_defaults
 
-    def user?
-        role == 'user'
-    end
+    # def set_defaults
+    #     self.user_role ||= "user"
+    # end
 end
