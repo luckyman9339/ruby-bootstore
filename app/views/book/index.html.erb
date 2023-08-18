@@ -1,17 +1,10 @@
 <h1>Book Store</h1>
 
-<%= link_to "logout", user_logout_path %>
+<%= link_to "logout", user_logout_path unless session[:user_id] == nil %>
+
+<% @books %>
+
+
 
 <div class="container">
-    <% @books.each do |i| %>
-        <div class="book">
-            <%= image_tag i.cover_image %>
-            <div class="book_info">
-                <p><%= i.title %></p>
-                <p><%= i.author %></p>
-                <p><%= i.description %></p>
-                <p><%= i.genre %></p>
-            </div>
-        </div>
-    <% end %>
 </div>
