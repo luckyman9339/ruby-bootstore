@@ -1,2 +1,32 @@
-<h1>Book#show</h1>
-<p>Find me in app/views/book/show.html.erb</p>
+<div class="show_book"></div>
+
+<script>
+  var authToken = <%= @token %>
+  var book_id = <%= @book_id %>
+ 
+const container = document.querySelector(".show_book");
+fetch(`http://localhost:3000/api/books/${book_id}`, {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${authToken}`
+  }
+})
+.then(response => response.json())
+.then(data => {
+  const booksHtml =
+  `<div class="book">
+      <img src="${data.cover_image}" />
+      <div class="data_info">
+        <p>${data.title}</p>
+        <p>${data.author}</p>
+        <p>${data.description}</p>
+        <p>${data.genre}</p>
+      </div>
+   </div>`
+
+  container.innerHTML = booksHtml;
+})
+.catch(error => {
+  console.error('Error:', error);
+});
+</script>

@@ -1,10 +1,36 @@
-<h1>Book Store</h1>
-
-<%= link_to "logout", user_logout_path unless session[:user_id] == nil %>
-
-<% @books %>
-
-
-
-<div class="container">
+<div>
+  user: <%= @role %>
 </div>
+
+<div class="container"></div>
+
+
+<script>
+  var authToken = <%= @token %>
+ 
+const container = document.querySelector(".container");
+fetch('http://localhost:3000/api/books', {
+  method: 'GET',
+  headers: {
+    'Authorization': `Bearer ${authToken}`
+  }
+})
+.then(response => response.json())
+.then(data => {
+  console.log(data)
+  const booksHtml = data.map(book => `
+    <div class="book">
+      <img src="${book.cover_image}" />
+      <div class="book_info">
+        <p>${book.title}</p>
+        <p>${book.author}</p>
+      </div>
+    </div>
+  `).join('');
+
+  container.innerHTML = booksHtml;
+})
+.catch(error => {
+  console.error('Error:', error);
+});
+</script>

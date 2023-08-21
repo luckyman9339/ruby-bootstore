@@ -1,13 +1,5 @@
 Rails.application.routes.draw do
 
-  # namespace :api do
-  #   get 'books/index'
-  #   get 'books/show'
-  #   post 'books/create'
-  #   get 'books/update'
-  #   get 'books/destroy'
-  # end
-
   namespace :api do
     resources :books, only: [:index, :show, :create, :update, :destroy]
   end
@@ -19,10 +11,9 @@ Rails.application.routes.draw do
   post 'user/create'
   get 'user/logout'
 
-  get 'book/show'
+  get 'book/:id', to: 'book#show', as: 'book'
   get 'book/new'
-  post 'book/create'
-  get 'book/edit'
+  get 'book/edit/:id', to: 'book#edit'
   get 'book/destroy'
   get 'book/user'
   get 'book/review'

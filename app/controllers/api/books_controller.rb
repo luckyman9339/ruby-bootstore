@@ -2,10 +2,10 @@ module Api
   class BooksController < ApplicationController
     skip_before_action :verify_authenticity_token
     before_action :set_book, only: [:show, :update, :destroy]
-    before_action :authenticate_request
-  
+    
     include AuthenticateUser
     before_action :authorize_admin, only: [:new, :edit, :destroy]
+    before_action :authenticate_request
 
     def index
       @books = Book.all
@@ -46,14 +46,6 @@ module Api
 
     def book_params
       params.require(:book).permit(:author, :title, :genre, :description, :cover_image)
-    end
-
-    def authenticate_request
-      token = request.headers['Authorization'].split(' ').last
-      decoded_token = JWT.decode(token, 'abcd', true, algorithm: 'HS256')
-      @current_user = User.find(decoded_token.first['user_id'])
-    rescue JWT::DecodeError, ActiveRecord::RecordNotFound
-      render json: { error: 'Unauthorized' }, status: :unauthorized
     end
 
   end

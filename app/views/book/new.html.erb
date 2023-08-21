@@ -1,31 +1,49 @@
-<%= form_for(@book, url: book_create_path) do |f| %>
-    <div class="field">
-      <%= f.label :author %>
-      <%= f.text_field :author %>
-    </div>
+<div class="form-container">
+  <input id="author" type="text" placeholder="Author">
+  <input id="title" type="text" placeholder="Title">
+  <input id="genre" type="text" placeholder="Genre">
+  <input id="description" type="text" placeholder="Description">
+  <input id="cover_image" type="text" placeholder="Cover Image URL">
+  <button id="submit-button">Submit</button>
+</div>
+
+<script>
+    var authToken = <%= @token %>
+    const submitButton = document.getElementById('submit-button');
+    const formContainer = document.querySelector('.form-container');
     
-    <div class="field">
-      <%= f.label :title %>
-      <%= f.text_field :title %>
-    </div>
-  
-    <div class="field">
-      <%= f.label :genre %>
-      <%= f.text_field :genre %>
-    </div>
-
-    <div class="field">
-        <%= f.label :description %>
-        <%= f.text_field :description %>
-    </div>
-
-    <div class="field">
-        <%= f.label :cover_image %>
-        <%= f.text_field :cover_image %>
-    </div>
+    submitButton.addEventListener('click', () => {
+      const author = document.getElementById('author').value;
+      const title = document.getElementById('title').value;
+      const genre = document.getElementById('genre').value;
+      const description = document.getElementById('description').value;
+      const coverImage = document.getElementById('cover_image').value;
       
-    <div class="actions">
-      <%= f.submit %>
-    </div>
-  <% end %>
+      const formData = {
+        author: author,
+        title: title,
+        genre: genre,
+        description: description,
+        cover_image: coverImage
+      };
+      
+      fetch('http://localhost:3000/api/books', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${authToken}`
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log('Book created:', data);
+        // Handle success, e.g., show a success message to the user
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        // Handle error, e.g., show an error message to the user
+      });
+    });
   
+</script>

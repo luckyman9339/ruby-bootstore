@@ -5,21 +5,25 @@ class BookController < ApplicationController
   before_action :authorize_admin, only: [:new, :edit, :destroy]
 
   def index
-    @books = Book.all
+    payload = { user_id: 1, user_role: "guest" }
+    session[:user] = JWT.encode(payload, 'abcd', 'HS256') unless session[:user]
+
+    @token = (session[:user].to_json.html_safe if session[:user].to_json)
+    @role = JWT.decode(session[:user], 'abcd', true, algorithm: 'HS256')[0]["user_role"]
   end
   
   def show
+    @token = (session[:user].to_json.html_safe if session[:user].to_json)
+    @book_id = params[:id]
   end
   
   def new
-    @book = Book.new
-  end
-
-  def create
-      @book = Book.new( params.require(:book).permit(:title, :description, :author, :genre, :cover_image))
+    @token = (session[:user].to_json.html_safe if session[:user].to_json)
   end
 
   def edit
+    @token = (session[:user].to_json.html_safe if session[:user].to_json)
+    @book_id = params[:id]
   end
 
   def destroy
