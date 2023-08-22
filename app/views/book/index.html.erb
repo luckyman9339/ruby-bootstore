@@ -1,36 +1,44 @@
-<div>
-  user: <%= @role %>
-</div>
+
+
+<%= render 'navbar', role: @role %>
 
 <div class="container"></div>
 
-
 <script>
-  var authToken = <%= @token %>
- 
-const container = document.querySelector(".container");
-fetch('http://localhost:3000/api/books', {
-  method: 'GET',
-  headers: {
-    'Authorization': `Bearer ${authToken}`
-  }
-})
-.then(response => response.json())
-.then(data => {
-  console.log(data)
-  const booksHtml = data.map(book => `
-    <div class="book">
-      <img src="${book.cover_image}" />
-      <div class="book_info">
-        <p>${book.title}</p>
-        <p>${book.author}</p>
-      </div>
-    </div>
-  `).join('');
 
-  container.innerHTML = booksHtml;
+function getBook(id) {
+  window.location.href = `/book/${id}`;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  var authToken = <%= @token %>
+  
+  var container = document.querySelector(".container");
+  fetch('http://localhost:3000/api/books', {
+    method: 'GET',
+    headers: {
+      'Authorization': `Bearer ${authToken}`
+    }
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log(data)
+    const booksHtml = data.map(book => `
+      <div class="book" onclick = getBook(${book.id})>
+        <img src="${book.cover_image}" />
+        <div class="book_info">
+          <p>${book.title}</p>
+          <p>${book.author}</p>
+        </div>
+      </div>
+    `).join('')
+    container.innerHTML = booksHtml;
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
 })
-.catch(error => {
-  console.error('Error:', error);
-});
+
+
 </script>

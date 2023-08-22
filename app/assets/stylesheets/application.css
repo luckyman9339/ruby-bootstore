@@ -23,4 +23,17 @@
     flex: 0 1 30%;
     display: flex;
     gap: 1rem;
+    cursor: pointer;
  }
+
+.logout-button{
+   cursor: pointer;
+}
+.navbar{
+   display: flex;
+   width: 100%;
+   justify-content: end;
+   gap: 3rem;
+   min-height: 10vh;
+   align-items: center;
+}

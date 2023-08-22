@@ -15,18 +15,11 @@ class BookController < ApplicationController
   def show
     @token = (session[:user].to_json.html_safe if session[:user].to_json)
     @book_id = params[:id]
+    @role = JWT.decode(session[:user], 'abcd', true, algorithm: 'HS256')[0]["user_role"]
   end
   
   def new
     @token = (session[:user].to_json.html_safe if session[:user].to_json)
-  end
-
-  def edit
-    @token = (session[:user].to_json.html_safe if session[:user].to_json)
-    @book_id = params[:id]
-  end
-
-  def destroy
   end
 
 end

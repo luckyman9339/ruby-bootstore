@@ -1,10 +1,19 @@
+<%= render 'navbar', role: @role %>
+
 <div class="show_book"></div>
 
+<div class="delete_book"><%= button_tag "delet book" unless @role !=  "admin" %></div>
+
+<div class="edit_book"><%= button_tag "edit book" unless @role !=  "admin" %></div>
+
 <script>
-  var authToken = <%= @token %>
-  var book_id = <%= @book_id %>
- 
+const authToken = <%= @token %>
+const book_id = <%= @book_id %>
+const delete_book = document.querySelector(".delete_book")
+const edit_book = document.querySelector(".edit_book")
 const container = document.querySelector(".show_book");
+var temp_data = {}
+
 fetch(`http://localhost:3000/api/books/${book_id}`, {
   method: 'GET',
   headers: {
@@ -14,7 +23,7 @@ fetch(`http://localhost:3000/api/books/${book_id}`, {
 .then(response => response.json())
 .then(data => {
   const booksHtml =
-  `<div class="book">
+  `<div>
       <img src="${data.cover_image}" />
       <div class="data_info">
         <p>${data.title}</p>
@@ -25,8 +34,82 @@ fetch(`http://localhost:3000/api/books/${book_id}`, {
    </div>`
 
   container.innerHTML = booksHtml;
+  temp_data = {...data}
 })
 .catch(error => {
   console.error('Error:', error);
 });
+
+delete_book.addEventListener("click",()=>{
+  fetch(`http://localhost:3000/api/books/${book_id}`, {
+  method: 'DELETE',
+  headers: {
+    'Authorization': `Bearer ${authToken}`
+  }
+  })
+  .then(()=>{
+    window.location.href = '<%= root_path %>';
+  })
+  .catch((error)=>{
+    console.log(error)
+  })
+})
+
+edit_book.addEventListener("click", () => {
+  const booksHtml =
+  `<form id="editForm">
+      <input id="cover_image" value="${temp_data.cover_image}" type="text"/>
+      <div class="temp_data_info">
+        <input id="title" value="${temp_data.title}" type="text"/>
+        <input id="author" value="${temp_data.author}" type="text" />
+        <input id="description" value="${temp_data.description}" type="text" />
+        <input id="genre" value="${temp_data.genre}" type="text"/>
+      </div>
+      <button type="submit" value="Submit">update book</button>
+   </form>`
+
+  container.innerHTML = booksHtml;
+
+  edit_book.style.display = "none"
+
+  const editForm = document.getElementById('editForm');
+  editForm.addEventListener('submit', function(event) {
+    event.preventDefault(); 
+    const formData = {
+      cover_image: document.getElementById('cover_image').value,
+      title: document.getElementById('title').value,
+      author: document.getElementById('author').value,
+      description: document.getElementById('description').value,
+      genre: document.getElementById('genre').value
+    };
+
+ 
+    fetch(`http://localhost:3000/api/books/${book_id}`, {
+      method: 'PATCH',
+      headers: {
+        'Authorization': `Bearer ${authToken}`,
+        'Content-Type': 'application/json' // Specify the content type
+      },
+      body: JSON.stringify(formData) // Convert formData to JSON string
+    })
+    .then(response => {
+      if (response.ok) {
+        window.location.href = `/book/${book_id}`;
+      } else {
+        console.log("Error updating book");
+      }
+    })
+    .catch(error => {
+      console.error('Error:', error);
+    });
+    
+
+  });
+
+
+});
+
+
+
+
 </script>

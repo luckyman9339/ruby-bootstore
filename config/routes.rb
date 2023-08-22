@@ -13,8 +13,6 @@ Rails.application.routes.draw do
 
   get 'book/:id', to: 'book#show', as: 'book'
   get 'book/new'
-  get 'book/edit/:id', to: 'book#edit'
-  get 'book/destroy'
   get 'book/user'
   get 'book/review'
   
