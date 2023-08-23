@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :cart, only: [:index, :create, :destroy, :update]
+
   namespace :api do
     resources :books, only: [:index, :show, :create, :update, :destroy]
   end

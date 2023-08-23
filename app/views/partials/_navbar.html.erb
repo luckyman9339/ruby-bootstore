@@ -1,0 +1,15 @@
+<div class="navbar">
+  <% unless role == "guest" %><button class="logout-button"><%= "logout" %></button><% end %>
+  <%= link_to "login", login_path unless role != 'guest' %>
+  <% unless current_page?(cart_index_path) %><%= link_to "cart", cart_index_path unless role != 'user' %><% end %>
+  <% unless current_page?(root_path) %><button class="home-button">home</button><% end %>
+  <div>  user: <%= role %></div>
+</div>
+
+<script>
+    var logoutButton = document.querySelector('.logout-button');
+    logoutButton.addEventListener('click', () => {window.location.href = '<%= user_logout_path %>';});
+
+    var homeButton = document.querySelector('.home-button');
+    homeButton.addEventListener('click', () => {window.location.href = '<%= root_path %>';});
+</script>

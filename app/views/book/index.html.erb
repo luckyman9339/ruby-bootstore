@@ -1,6 +1,6 @@
 
 
-<%= render 'navbar', role: @role %>
+<%= render 'partials/navbar', role: @role %>
 
 <div class="container"></div>
 
@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
         <div class="book_info">
           <p>${book.title}</p>
           <p>${book.author}</p>
+          <p>${book.price}</p>
         </div>
       </div>
     `).join('')
