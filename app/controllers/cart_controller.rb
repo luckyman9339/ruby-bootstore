@@ -41,7 +41,7 @@ def destroy
 end
 
 def update
-  Cart.find(id: params[:id]).update(quantity: params[:quantity])
+  Cart.find(params[:id]).update(quantity: params[:quantity])
 end
 
 end

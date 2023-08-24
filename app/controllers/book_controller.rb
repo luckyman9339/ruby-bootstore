@@ -4,6 +4,8 @@ class BookController < ApplicationController
 
   before_action :authorize_admin, only: [:new, :edit, :destroy]
 
+  layout "book"
+
   def index
     payload = { user_id: 1, user_role: "guest" }
     session[:user] = JWT.encode(payload, 'abcd', 'HS256') unless session[:user]

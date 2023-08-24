@@ -2,41 +2,48 @@
 
 <h1>Your Cart</h1>
 
-<% @cart_items.each do |cart_item| %>
-    <div class="container">
-        <%= image_tag cart_item.book.cover_image %>
-        <div>
-            <p><%= cart_item.book.title %></p>
-            <p><%= cart_item.book.author %></p>
-            <input class="quantity_input" value="<%= cart_item.quantity %>" name="quantity" type="number"/>
-            <p>price: <%= cart_item.book.price * cart_item.quantity %></p>
-        </div>
-        <div>
-            <%= link_to "delete", cart_path(cart_item.id), method: :delete%>
-        </div>
+<div id="cart-items">
+  <% @cart_items.each do |cart_item| %>
+    <div class="container" data-cart-id="<%= cart_item.id %>">
+      <%= image_tag cart_item.book.cover_image %>
+      <div>
+        <p><%= cart_item.book.title %></p>
+        <p><%= cart_item.book.author %></p>
+        <input class="quantity_input" value="<%= cart_item.quantity %>" name="quantity" type="number"/>
+        <p>price: <%= number_to_currency(cart_item.book.price * cart_item.quantity, unit: "₹", precision: 2, delimiter: ",", format: "%u%n") %></p>
+      </div>
+     
+      <div>
+        <%= link_to "delete", cart_path(cart_item.id), method: :delete %>
+      </div>
     </div>
-    <script>
-        var quantity_input = document.querySelector(".container input");
-        quantity_input.addEventListener("input", () => {
-            let newQuantity = quantity_input.value;
-            let cartItemId = <%= cart_item.id %>;
+  <% end %>
+</div>
 
-            fetch('/cart/' + cartItemId, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ quantity: newQuantity })
-            })
-            .then(() => {
-                console.log("cart updated");
-                window.location.href = '<%= cart_index_path %>';
-            })
-            .catch((err) => {
-                console.log(err);
-            });
-        });
-    </script>
-<% end %>
+<script>
+  const cartItems = document.getElementById('cart-items');
+
+  cartItems.addEventListener('input', (event) => {
+    if (event.target.classList.contains('quantity_input')) {
+      const cartItemId = event.target.closest('.container').dataset.cartId;
+      const newQuantity = event.target.value;
+
+      fetch(`/cart/${cartItemId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ quantity: newQuantity })
+      })
+      .then(() => {
+        console.log("cart updated");
+        window.location.href = '<%= cart_index_path %>';
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  });
+</script>
 
 <h1>Total Price: <%= number_to_currency(@total, unit: "₹", precision: 2, delimiter: ",", format: "%u%n")%></h1>
