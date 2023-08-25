@@ -1,13 +1,16 @@
 <%= render 'partials/navbar', role: @role %>
 <div class="container"></div>
 
+<%= javascript_include_tag 'https://code.jquery.com/jquery-3.6.0.min.js' %>
 <script>
-  function getBook(id) {window.location.href = `/book/${id}`;}
+  function getBook(id) {
+    window.location.href = `/book/${id}`;
+  }
 
-  document.addEventListener('DOMContentLoaded', () => {
-    var authToken = <%= @token %>
-    
-    var container = document.querySelector(".container");
+  $(document).ready(function() {
+    var authToken = '<%= @token %>';
+    var container = $('.container');
+
     fetch('http://localhost:3000/api/books', {
       method: 'GET',
       headers: {
@@ -16,22 +19,48 @@
     })
     .then(response => response.json())
     .then(data => {
-      console.log(data)
+      console.log(data);
       const booksHtml = data.map(book => `
-        <div class="book" onclick = getBook(${book.id})>
+        <div class="book" onclick="getBook(${book.id})">
           <img src="${book.cover_image}" />
           <div class="book_info">
             <p>${book.title}</p>
             <p>${book.author}</p>
             <p>${book.price}</p>
+            <button onclick="abc(${book.id})">add to cart</button>
           </div>
         </div>
-      `).join('')
-      container.innerHTML = booksHtml;
+      `).join('');
+      container.html(booksHtml);
     })
     .catch(error => {
       console.error('Error:', error);
     });
+  });
 
-  })
+  function abc(book_id){
+    console.log("hai");
+    if ("<%= @role != 'user' %>") {
+      fetch('/cart', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          book_id: book_id,
+          user_id: <%= JWT.decode(session[:user], 'abcd', true, algorithm: 'HS256')[0]["user_id"]%>,
+          quantity: 1
+        })
+      })
+      .then(() => {
+        console.log("added to cart");
+        window.location.href = '<%= cart_index_path %>';
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    } else {
+      window.location.href = '<%= login_path %>';
+    }
+  }
 </script>

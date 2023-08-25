@@ -1,13 +1,10 @@
 class CartController < ApplicationController
   skip_before_action :verify_authenticity_token
- # app/controllers/cart_controller.rb
+
 def index
   user_id = JWT.decode(session[:user], 'abcd', true, algorithm: 'HS256')[0]["user_id"]
   @cart_items = Cart.where(user_id: user_id).includes(:book)
-
   @total = Cart.total_price(@cart_items)
-
-  @role = JWT.decode(session[:user], 'abcd', true, algorithm: 'HS256')[0]["user_role"]
 end
 
 def create

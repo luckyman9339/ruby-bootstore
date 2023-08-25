@@ -1,3 +1,27 @@
 // Place all the styles related to the book controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.container{
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.book{
+    flex: 0 1 26%;
+    display: flex;
+    gap: 1rem;
+    cursor: pointer;
+background-color: #e4b92b;
+border-radius: 10px;
+padding: 1rem;
+ }
+
+ .book img{
+    border-radius: 10px;
+ }

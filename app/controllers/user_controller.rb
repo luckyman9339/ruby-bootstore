@@ -30,7 +30,6 @@ class UserController < ApplicationController
   def create
     @user = User.new(user_params)
     if @user.save
-      # session[:user_id] = @user.id
       session[:user] = JWT.encode({ user_id: @user.id, user_role: @user.user_role }, 'abcd', 'HS256')
       redirect_to root_path, notice: "Registration successful. Welcome!"
     else
